@@ -19,8 +19,8 @@ export const calcNutrition = (ingredients: any[]): Nutrition => {
 }
 
 export const roundNutrition = (n: Nutrition): Nutrition => ({
-  calories: Number(n.calories.toFixed(2)),
-  protein: Number(n.protein.toFixed(2)),
-  fat: Number(n.fat.toFixed(2)),
-  carbs: Number(n.carbs.toFixed(2))
+  calories: Number(n.calories.toFixed(0)),
+  protein: Number(n.protein.toFixed(1)),
+  fat: Number(n.fat.toFixed(1)),
+  carbs: Number(n.carbs.toFixed(1))
 })

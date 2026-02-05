@@ -1,8 +1,16 @@
 import { pb } from './pocketbase'
 
 export const authApi = {
-  login(email: string, password: string) {
+  async login(email: string, password: string) {
     return pb.collection('users').authWithPassword(email, password)
+  },
+
+  async register(email: string, password: string) {
+    return pb.collection('users').create({
+      email,
+      password,
+      passwordConfirm: password
+    })
   },
 
   logout() {

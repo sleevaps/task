@@ -11,7 +11,7 @@ const { dishes, loading, error, reload, getImageUrl } = useDishes()
 </script>
 
 <template>
-  <div>
+  <div class="dashboard">
     <h1>Recipes</h1>
 
     <p v-if="loading">Loading...</p>
@@ -21,6 +21,7 @@ const { dishes, loading, error, reload, getImageUrl } = useDishes()
       <RecipeCard
         v-for="dish in dishes"
         :key="dish.id"
+        :id="dish.id"
         :title="dish.name"
         :description="dish.description"
         :calories="dish.calories"
@@ -37,3 +38,18 @@ const { dishes, loading, error, reload, getImageUrl } = useDishes()
     />
   </div>
 </template>
+
+<style scoped>
+
+.dashboard {
+  min-width: 50%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+
+</style>

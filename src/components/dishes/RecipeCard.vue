@@ -1,14 +1,24 @@
 <script setup lang="ts">
-defineProps<{
+import { useRouter } from 'vue-router'
+import { truncate } from '@/utils/text'
+
+const router = useRouter()
+
+const props = defineProps<{
+  id: string
   title: string
   description: string
   calories: number
   imageUrl?: string | null
 }>()
+
+const open = () => {
+  router.push(`/dish/${props.id}`)
+}
 </script>
 
 <template>
-  <div class="card">
+  <div class="card" @click="open">
     <div class="image-wrap">
       <img v-if="imageUrl" :src="imageUrl" />
       <div v-else class="placeholder">🍽</div>
@@ -18,7 +28,7 @@ defineProps<{
 
     <div class="content">
       <h3>{{ title }}</h3>
-      <p>{{ description }}</p>
+      <p>{{ truncate(description, 40) }}</p>
     </div>
   </div>
 </template>

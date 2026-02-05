@@ -25,6 +25,11 @@ const router = createRouter({
                     path: '',
                     name: 'dashboard',
                     component: Dashboard
+                },
+                {
+                    path: 'dish/:id',
+                    name: 'dish-details',
+                    component: () => import('@/pages/DishDetails.vue')
                 }
             ]
         },
@@ -45,7 +50,7 @@ router.beforeEach((to) => {
     }
 
     if (to.name === 'login' && isAuth) {
-        return { name : 'dashboard' }
+        return { name: 'dashboard' }
     }
 })
 

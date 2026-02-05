@@ -22,6 +22,10 @@ export const userStore = {
         state.isAuth = true
     },
 
+    async register(email: string, password: string) {
+        await authApi.register(email, password)
+    },
+
     logout() {
         authApi.logout()
         state.user = null

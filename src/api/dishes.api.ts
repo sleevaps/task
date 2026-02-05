@@ -5,6 +5,7 @@ export interface Dish extends Nutrition {
   id: string
   name: string
   description: string
+  recipe?: string
   image?: string
   created?: string
   updated?: string
@@ -89,6 +90,6 @@ export const dishesApi = {
 
   getImageUrl(dish: Dish) {
     if (!dish.image) return null
-    return pb.files.getUrl(dish, dish.image)
+    return pb.files.getURL(dish, dish.image)
   }
 }

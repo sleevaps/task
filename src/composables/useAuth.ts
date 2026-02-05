@@ -9,6 +9,7 @@ export function useAuth() {
     user,
     isAuth,
     login: userStore.login,
+    register: userStore.register,
     logout: userStore.logout
   }
 }

@@ -1,112 +1,100 @@
 <script setup lang="ts">
-import { RouterLink, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
+import { useAuth } from '@/composables/useAuth'
 
-const route = useRoute()
+const router = useRouter()
+const { logout } = useAuth()
 
-const isActive = (path: string) => route.path === path
+const goHome = () => {
+  router.push('/')
+}
+
+const onLogout = async () => {
+  await logout()
+  router.push('/login')
+}
 </script>
 
 <template>
   <aside class="sidebar">
-    <div class="logo">
-      <span>FlavorFit</span>
+    <div class="top">
+      <div class="logo">FlavorFit</div>
     </div>
 
-    <nav class="nav">
-      <RouterLink
-        to="/"
-        class="nav-item"
-        :class="{ active: isActive('/') }"
-      >
+    <nav class="menu">
+      <button class="item" @click="goHome">
         Home
-      </RouterLink>
-
-      <button class="nav-item active">
-        Recipes
-      </button>
-
-      <button class="nav-item">
-        Nutrition
-      </button>
-
-      <button class="nav-item">
-        Analytics
       </button>
     </nav>
+
+    <div class="bottom">
+      <button class="logout" @click="onLogout">
+        ⎋ Logout
+      </button>
+    </div>
   </aside>
 </template>
 
 <style scoped>
 .sidebar {
-  width: 260px;
-  background: #ffffff;
-  border-right: 1px solid #eee;
-  padding: 20px;
+  width: 220px;
+  height: 100vh;
+  position: sticky;
+  top: 0px;
+  background: #fff;
+  color: #111827;
+  border-right: 1px solid #e5e7eb;
   display: flex;
   flex-direction: column;
+  padding: 16px;
+}
+
+.top {
+  margin-bottom: 24px;
 }
 
 .logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 700;
   font-size: 18px;
-  margin-bottom: 28px;
+  font-weight: 700;
 }
 
-.nav {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.menu {
+  flex: 1;
 }
 
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  border-radius: 12px;
-  font-size: 14px;
-  color: #444;
-  text-decoration: none;
-  border: none;
+.item {
+  width: 100%;
   background: none;
+  border: none;
+  color: #111827;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-align: left;
   cursor: pointer;
+  font-size: 14px;
 }
 
-.nav-item:hover {
-  background: #f5f6fa;
+.item:hover {
+  background: #f3f4f6;;
 }
 
-.nav-item.active {
-  background: #eef2ff;
-  color: #4f46e5;
-  font-weight: 600;
+.bottom {
+  margin-top: auto;
 }
 
-.emoji {
-  font-size: 16px;
+.logout {
+  width: 100%;
+  background: none;
+  border: none;
+  color: #111827;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
 }
 
-.divider {
-  height: 1px;
-  background: #eee;
-  margin: 20px 0;
-}
-
-.filters h4 {
-  font-size: 12px;
-  color: #888;
-  margin-bottom: 10px;
-}
-
-.checkbox {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  margin-bottom: 8px;
-  color: #444;
+.logout:hover {
+  background: #f3f4f6;;
 }
 </style>

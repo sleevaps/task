@@ -1,31 +1,66 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useAuth } from '@/composables/useAuth'
 import { useRouter } from 'vue-router'
 
+type Mode = 'login' | 'register'
+
 const email = ref('')
 const password = ref('')
-const remember = ref(true)
+const remember = ref(false)
+const loading = ref(false)
 const error = ref('')
 
-const { login } = useAuth()
+const mode = ref<Mode>('login')
+
+const { login, register } = useAuth()
 const router = useRouter()
 
+const title = computed(() =>
+  mode.value === 'login' ? 'Welcome back' : 'Create account'
+)
+
+const subtitle = computed(() =>
+  mode.value === 'login'
+    ? 'Build your nutrition dashboard effortlessly'
+    : 'Start tracking your dishes and calories'
+)
+
+const submitText = computed(() =>
+  mode.value === 'login' ? 'Login' : 'Sign up'
+)
+
+const toggleText = computed(() =>
+  mode.value === 'login'
+    ? 'Don’t have an account? Sign up'
+    : 'Already have an account? Login'
+)
+
 const submit = async () => {
+  loading.value = true
   error.value = ''
 
   try {
-    await login(email.value, password.value)
+    if (mode.value === 'login') {
+      await login(email.value, password.value)
+    } else {
+      await register(email.value, password.value)
+
+      mode.value = 'login'
+      error.value = 'Account created. Please log in.'
+    }
+
     router.push('/')
-  } catch {
-    error.value = 'Invalid email or password'
+  } catch (e) {
+    error.value = 'Authentication failed'
+  } finally {
+    loading.value = false
   }
 }
 </script>
 
 <template>
   <div class="login-page">
-    <!-- LEFT -->
     <div class="promo">
       <div class="overlay">
         <h2>All the dishes you need<br />are here.</h2>
@@ -36,13 +71,10 @@ const submit = async () => {
       </div>
     </div>
 
-    <!-- RIGHT -->
     <div class="form-wrap">
       <div class="form-card">
-        <h1>Welcome back</h1>
-        <p class="subtitle">
-          Build your nutrition dashboard effortlessly
-        </p>
+        <h1>{{ title }}</h1>
+        <p class="subtitle">{{ subtitle }}</p>
 
         <input
           v-model="email"
@@ -53,10 +85,10 @@ const submit = async () => {
         <input
           v-model="password"
           type="password"
-          placeholder="Password"
+          placeholder="Password (At least 8 symbols)"
         />
 
-        <div class="row">
+        <div v-if="mode === 'login'" class="row">
           <label>
             <input type="checkbox" v-model="remember" />
             Remember me
@@ -65,9 +97,18 @@ const submit = async () => {
           <a href="#">Forgot password?</a>
         </div>
 
-        <button @click="submit">Log in</button>
+        <button :disabled="loading" @click="submit">
+          {{ loading ? 'Please wait…' : submitText }}
+        </button>
 
         <p v-if="error" class="error">{{ error }}</p>
+
+        <p
+          class="toggle"
+          @click="mode = mode === 'login' ? 'register' : 'login'"
+        >
+          {{ toggleText }}
+        </p>
       </div>
     </div>
   </div>
@@ -81,7 +122,6 @@ const submit = async () => {
   background: #f5f6fa;
 }
 
-/* LEFT */
 .promo {
   background: url('https://hayat.rest/image/catalog/blog/shutterstock_644368891(1).jpg')
     center / cover no-repeat;
@@ -117,7 +157,6 @@ const submit = async () => {
   opacity: 0.7;
 }
 
-/* RIGHT */
 .form-wrap {
   display: flex;
   align-items: center;
@@ -188,6 +227,11 @@ button:hover {
   text-align: center;
 }
 
+.toggle:hover { 
+  color: #6366f1;
+  text-decoration: underline;
+  cursor: pointer;
+}
 
 @media (max-width: 900px) {
   .login-page {

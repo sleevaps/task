@@ -30,8 +30,10 @@ import Header from '@/components/layout/Header.vue';
 }
 
 .content {
+  display: flex;
   padding: 24px;
   flex: 1;
   overflow-y: auto;
+  justify-content: center;
 }
 </style>
